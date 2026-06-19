@@ -106,8 +106,12 @@ def get_gemini_response(conversation_history: list, user_message: str) -> str:
     client = Groq(api_key=api_key)
 
     messages = [{"role": "system", "content": build_system_prompt()}]
-    messages.extend(conversation_history)
+
+    # Keep only the last 10 messages
+    messages.extend(conversation_history[-10:])
+
     messages.append({"role": "user", "content": user_message})
+
 
     response = client.chat.completions.create(
         model="llama-3.1-8b-instant",
