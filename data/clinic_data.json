@@ -1,0 +1,128 @@
+{
+  "clinic": {
+    "name": "CarePlus Multispeciality Clinic",
+    "tagline": "Compassionate Care, Advanced Medicine",
+    "location": {
+      "address": "42, Saraswathipuram Main Road, Mysore, Karnataka - 570009",
+      "landmark": "Near Saraswathipuram Circle, opposite State Bank of India",
+      "city": "Mysore",
+      "state": "Karnataka",
+      "pincode": "570009"
+    },
+    "contact": {
+      "phone": "+91 9876543210",
+      "whatsapp": "+91 9876543210",
+      "email": "appointments@careplusmysore.in",
+      "emergency": "+91 9876543211"
+    },
+    "working_hours": {
+      "monday_to_saturday": "9:00 AM – 7:00 PM",
+      "sunday": "10:00 AM – 2:00 PM",
+      "public_holidays": "Closed (Emergency contact available)"
+    },
+    "services": [
+      "General Medicine", "Cardiology", "Orthopedics", "Dermatology", "Pediatrics"
+    ],
+    "doctors": [
+      {
+        "name": "Dr. Rajesh Sharma",
+        "specialization": "Cardiologist",
+        "qualification": "MBBS, MD (Cardiology), DM – AIIMS Delhi",
+        "experience": "18 years",
+        "consultation_fee": 800,
+        "languages": ["English", "Hindi", "Kannada"],
+        "schedule": {
+          "Monday":    { "available": true,  "slots": ["10:00 AM", "10:30 AM", "11:00 AM", "11:30 AM", "12:00 PM"] },
+          "Tuesday":   { "available": false, "slots": [] },
+          "Wednesday": { "available": true,  "slots": ["10:00 AM", "10:30 AM", "11:00 AM", "11:30 AM", "12:00 PM"] },
+          "Thursday":  { "available": false, "slots": [] },
+          "Friday":    { "available": true,  "slots": ["10:00 AM", "10:30 AM", "11:00 AM", "11:30 AM", "12:00 PM"] },
+          "Saturday":  { "available": false, "slots": [] },
+          "Sunday":    { "available": false, "slots": [] }
+        }
+      },
+      {
+        "name": "Dr. Priya Nair",
+        "specialization": "Dermatologist",
+        "qualification": "MBBS, MD (Dermatology) – KMC Manipal",
+        "experience": "12 years",
+        "consultation_fee": 700,
+        "languages": ["English", "Kannada", "Malayalam"],
+        "schedule": {
+          "Monday":    { "available": false, "slots": [] },
+          "Tuesday":   { "available": true,  "slots": ["11:00 AM", "11:30 AM", "12:00 PM", "12:30 PM", "1:00 PM"] },
+          "Wednesday": { "available": false, "slots": [] },
+          "Thursday":  { "available": true,  "slots": ["11:00 AM", "11:30 AM", "12:00 PM", "12:30 PM", "1:00 PM"] },
+          "Friday":    { "available": false, "slots": [] },
+          "Saturday":  { "available": true,  "slots": ["11:00 AM", "11:30 AM", "12:00 PM", "12:30 PM", "1:00 PM"] },
+          "Sunday":    { "available": false, "slots": [] }
+        }
+      },
+      {
+        "name": "Dr. Arjun Reddy",
+        "specialization": "Orthopedic Surgeon",
+        "qualification": "MBBS, MS (Orthopedics) – NIMHANS Bangalore",
+        "experience": "15 years",
+        "consultation_fee": 750,
+        "languages": ["English", "Kannada", "Telugu"],
+        "schedule": {
+          "Monday":    { "available": true,  "slots": ["9:00 AM", "9:30 AM", "10:00 AM", "10:30 AM", "11:00 AM"] },
+          "Tuesday":   { "available": true,  "slots": ["9:00 AM", "9:30 AM", "10:00 AM", "10:30 AM", "11:00 AM"] },
+          "Wednesday": { "available": false, "slots": [] },
+          "Thursday":  { "available": true,  "slots": ["9:00 AM", "9:30 AM", "10:00 AM", "10:30 AM", "11:00 AM"] },
+          "Friday":    { "available": false, "slots": [] },
+          "Saturday":  { "available": false, "slots": [] },
+          "Sunday":    { "available": false, "slots": [] }
+        }
+      },
+      {
+        "name": "Dr. Kavya Menon",
+        "specialization": "General Physician",
+        "qualification": "MBBS, MRCP (UK)",
+        "experience": "10 years",
+        "consultation_fee": 500,
+        "languages": ["English", "Kannada", "Malayalam", "Hindi"],
+        "schedule": {
+          "Monday":    { "available": true,  "slots": ["9:00 AM", "9:30 AM", "10:00 AM", "4:00 PM", "5:00 PM"] },
+          "Tuesday":   { "available": true,  "slots": ["9:00 AM", "9:30 AM", "10:00 AM", "4:00 PM", "5:00 PM"] },
+          "Wednesday": { "available": true,  "slots": ["9:00 AM", "9:30 AM", "10:00 AM", "4:00 PM", "5:00 PM"] },
+          "Thursday":  { "available": true,  "slots": ["9:00 AM", "9:30 AM", "10:00 AM", "4:00 PM", "5:00 PM"] },
+          "Friday":    { "available": true,  "slots": ["9:00 AM", "9:30 AM", "10:00 AM", "4:00 PM", "5:00 PM"] },
+          "Saturday":  { "available": true,  "slots": ["9:00 AM", "9:30 AM", "10:00 AM", "4:00 PM", "5:00 PM"] },
+          "Sunday":    { "available": false, "slots": [] }
+        }
+      },
+      {
+        "name": "Dr. Rohit Verma",
+        "specialization": "Pediatrician",
+        "qualification": "MBBS, MD (Pediatrics) – Bangalore Medical College",
+        "experience": "9 years",
+        "consultation_fee": 600,
+        "languages": ["English", "Hindi", "Kannada"],
+        "schedule": {
+          "Monday":    { "available": true,  "slots": ["10:00 AM", "10:30 AM", "11:00 AM", "4:00 PM", "5:00 PM"] },
+          "Tuesday":   { "available": true,  "slots": ["10:00 AM", "10:30 AM", "11:00 AM", "4:00 PM", "5:00 PM"] },
+          "Wednesday": { "available": true,  "slots": ["10:00 AM", "10:30 AM", "11:00 AM", "4:00 PM", "5:00 PM"] },
+          "Thursday":  { "available": true,  "slots": ["10:00 AM", "10:30 AM", "11:00 AM", "4:00 PM", "5:00 PM"] },
+          "Friday":    { "available": true,  "slots": ["10:00 AM", "10:30 AM", "11:00 AM", "4:00 PM", "5:00 PM"] },
+          "Saturday":  { "available": true,  "slots": ["10:00 AM", "10:30 AM", "11:00 AM", "4:00 PM", "5:00 PM"] },
+          "Sunday":    { "available": false, "slots": [] }
+        }
+      }
+    ],
+    "insurance": {
+      "accepted_providers": [
+        "Star Health Insurance", "HDFC ERGO Health", "ICICI Lombard",
+        "United India Insurance", "New India Assurance", "Medi Assist TPA",
+        "Health India TPA", "Religare Health Insurance", "Bajaj Allianz Health"
+      ],
+      "cashless_facility": true,
+      "note": "Carry your insurance card and a valid photo ID. Pre-authorization may be required for specialist consultations."
+    },
+    "facilities": [
+      "In-house Pharmacy", "Digital X-Ray", "ECG & Echocardiography",
+      "On-site Laboratory", "Wheelchair Accessible", "Free Parking",
+      "AC Waiting Area", "Online Appointment Booking"
+    ]
+  }
+}
