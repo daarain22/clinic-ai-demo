@@ -1,13 +1,16 @@
 """
 CarePlus AI Receptionist — FastAPI Backend
 """
-
+import re
+from services.appointment_service import save_appointment
 from fastapi import FastAPI, Request, HTTPException
 from fastapi.responses import HTMLResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 from pydantic import BaseModel
 from services.gemini_service import get_gemini_response
+from fastapi.responses import JSONResponse
+from services.appointment_service import get_appointments
 import uvicorn
 
 app = FastAPI(title="CarePlus AI Receptionist", version="1.0.0")
@@ -50,6 +53,28 @@ async def chat(payload: ChatRequest):
         raise HTTPException(status_code=500, detail=str(e))
     except Exception as e:
         raise HTTPException(status_code=502, detail=f"AI service error: {str(e)}")
+    
+    # Save completed appointment requests
+    if "Appointment Requested!" in reply:
+        try:
+            patient_match = re.search(r"Patient\s*:\s*(.*)", reply)
+            phone_match = re.search(r"Mobile\s*:\s*(.*)", reply)
+            doctor_match = re.search(r"Doctor\s*:\s*(.*)", reply)
+            date_match = re.search(r"Date\s*:\s*(.*)", reply)
+            time_match = re.search(r"Time\s*:\s*(.*)", reply)
+
+            if all([patient_match, phone_match, doctor_match, date_match, time_match]):
+                save_appointment({
+                    "patient": patient_match.group(1).strip(),
+                    "phone": phone_match.group(1).strip(),
+                    "doctor": doctor_match.group(1).strip(),
+                    "date": date_match.group(1).strip(),
+                    "time": time_match.group(1).strip(),
+                    "status": "Pending Confirmation"
+                })
+
+        except Exception as e:
+            print(f"Appointment save error: {e}")
 
     # Groq uses "assistant" role (not "model")
     history.append({"role": "user", "content": payload.message})
@@ -67,6 +92,9 @@ async def reset_chat(session_id: str = "default"):
     sessions.pop(session_id, None)
     return {"message": "Conversation reset successfully."}
 
+@app.get("/admin/appointments")
+async def admin_appointments():
+    return JSONResponse(content=get_appointments())
 
 if __name__ == "__main__":
     uvicorn.run("app:app", host="0.0.0.0", port=8000, reload=True)
