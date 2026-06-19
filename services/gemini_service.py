@@ -110,7 +110,7 @@ def get_gemini_response(conversation_history: list, user_message: str) -> str:
     messages.append({"role": "user", "content": user_message})
 
     response = client.chat.completions.create(
-        model="llama-3.3-70b-versatile",
+        model="llama-3.1-8b-instant",
         messages=messages,
         max_tokens=600,
         temperature=0.3,        # Lower = more precise, less creative drift
