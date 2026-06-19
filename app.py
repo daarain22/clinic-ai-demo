@@ -1,16 +1,17 @@
 """
 CarePlus AI Receptionist — FastAPI Backend
 """
-import re
-from services.appointment_service import save_appointment
 from fastapi import FastAPI, Request, HTTPException
-from fastapi.responses import HTMLResponse
+from fastapi.responses import HTMLResponse, JSONResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 from pydantic import BaseModel
+from services.appointment_service import get_appointments, save_appointment
+from services.appointment_state_machine import (
+    AppointmentStateMachine,
+    is_appointment_intent,
+)
 from services.gemini_service import get_gemini_response
-from fastapi.responses import JSONResponse
-from services.appointment_service import get_appointments
 import uvicorn
 
 app = FastAPI(title="CarePlus AI Receptionist", version="1.0.0")
@@ -18,7 +19,7 @@ app = FastAPI(title="CarePlus AI Receptionist", version="1.0.0")
 app.mount("/static", StaticFiles(directory="static"), name="static")
 templates = Jinja2Templates(directory="templates")
 
-# In-memory session store: session_id -> list of message dicts
+# In-memory session store: session_id -> {"history": list, "booking": AppointmentStateMachine | None}
 sessions: dict = {}
 
 
@@ -31,6 +32,22 @@ class ChatResponse(BaseModel):
     response: str
 
 
+def get_session(session_id: str) -> dict:
+    if session_id not in sessions:
+        sessions[session_id] = {"history": [], "booking": None}
+    return sessions[session_id]
+
+
+def remember_exchange(session: dict, user_message: str, assistant_message: str) -> None:
+    history = session["history"]
+    history.append({"role": "user", "content": user_message})
+    history.append({"role": "assistant", "content": assistant_message})
+
+    # Cap at last 20 exchanges (40 messages)
+    if len(history) > 40:
+        session["history"] = history[-40:]
+
+
 @app.get("/", response_class=HTMLResponse)
 async def index(request: Request):
     return templates.TemplateResponse("index.html", {"request": request})
@@ -41,48 +58,36 @@ async def chat(payload: ChatRequest):
     if not payload.message.strip():
         raise HTTPException(status_code=400, detail="Message cannot be empty.")
 
-    session_id = payload.session_id
-    if session_id not in sessions:
-        sessions[session_id] = []
+    session = get_session(payload.session_id)
+    history = session["history"]
+    booking = session["booking"]
 
-    history = sessions[session_id]
-
-    try:
-        reply = get_gemini_response(history, payload.message)
-    except ValueError as e:
-        raise HTTPException(status_code=500, detail=str(e))
-    except Exception as e:
-        raise HTTPException(status_code=502, detail=f"AI service error: {str(e)}")
-    
-    # Save completed appointment requests
-    if "Appointment Requested!" in reply:
+    if booking:
+        reply = booking.handle(payload.message)
+    elif is_appointment_intent(payload.message):
+        booking = AppointmentStateMachine()
+        session["booking"] = booking
+        reply = booking.handle(payload.message)
+    else:
         try:
-            patient_match = re.search(r"Patient\s*:\s*(.*)", reply)
-            phone_match = re.search(r"Mobile\s*:\s*(.*)", reply)
-            doctor_match = re.search(r"Doctor\s*:\s*(.*)", reply)
-            date_match = re.search(r"Date\s*:\s*(.*)", reply)
-            time_match = re.search(r"Time\s*:\s*(.*)", reply)
-
-            if all([patient_match, phone_match, doctor_match, date_match, time_match]):
-                save_appointment({
-                    "patient": patient_match.group(1).strip(),
-                    "phone": phone_match.group(1).strip(),
-                    "doctor": doctor_match.group(1).strip(),
-                    "date": date_match.group(1).strip(),
-                    "time": time_match.group(1).strip(),
-                    "status": "Pending Confirmation"
-                })
-
+            reply = get_gemini_response(history, payload.message)
+        except ValueError as e:
+            raise HTTPException(status_code=500, detail=str(e))
         except Exception as e:
-            print(f"Appointment save error: {e}")
+            raise HTTPException(status_code=502, detail=f"AI service error: {str(e)}")
 
-    # Groq uses "assistant" role (not "model")
-    history.append({"role": "user", "content": payload.message})
-    history.append({"role": "assistant", "content": reply})
+    if booking and booking.is_complete() and not booking.saved:
+        try:
+            save_appointment(booking.appointment_payload())
+            booking.saved = True
+            session["booking"] = None
+        except Exception as e:
+            raise HTTPException(status_code=500, detail=f"Appointment save error: {str(e)}")
 
-    # Cap at last 20 exchanges (40 messages)
-    if len(history) > 40:
-        sessions[session_id] = history[-40:]
+    if booking and booking.is_cancelled():
+        session["booking"] = None
+
+    remember_exchange(session, payload.message, reply)
 
     return ChatResponse(response=reply)
 
