@@ -14,7 +14,16 @@
     "doctor": "Dr. Rajesh Sharma - Cardiologist",
     "date": "Wednesday, 24 Jun 2026",
     "time": "11:30 AM",
-    "status": "Pending Confirmation",
+    "status": "Cancelled",
     "created_at": "2026-06-19T14:59:06.784896"
+  },
+  {
+    "patient": "netpilotai",
+    "phone": "7899352501",
+    "doctor": "Dr. Rohit Verma - Pediatrician",
+    "date": "Friday, 19 Jun 2026",
+    "time": "10:00 AM",
+    "status": "Confirmed",
+    "created_at": "2026-06-19T15:21:03.535128"
   }
 ]

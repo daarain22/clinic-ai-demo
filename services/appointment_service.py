@@ -24,3 +24,16 @@ def save_appointment(appointment):
         json.dump(appointments, f, indent=2)
 
     return appointment
+
+
+def update_appointment_status(created_at, status):
+    appointments = get_appointments()
+
+    for appointment in appointments:
+        if appointment.get("created_at") == created_at:
+            appointment["status"] = status
+            with open(APPOINTMENTS_FILE, "w") as f:
+                json.dump(appointments, f, indent=2)
+            return appointment
+
+    return None
